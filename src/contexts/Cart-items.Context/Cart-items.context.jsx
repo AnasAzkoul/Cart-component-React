@@ -8,20 +8,12 @@ const addProductToList = (cartList, productToAdd) => {
 	const existingProduct = cartList.find(product => product.id === productToAdd.id); 
 	// if that's true, return the product with increased quantity,
 	if (existingProduct) {
-		return cartList.map(product => ({ ...product, quantity: product.quantity + 1 })); 
+		return cartList.map(product => product.id === productToAdd.id ?
+			({ ...product, quantity: product.quantity + 1 }) : product); 
 	}
 
 	// if it doens't exist, return the new product with quantity equals to 1, 
 	return [...cartList, { ...productToAdd, quantity: 1 }]; 
-}
-// increment existing product
-const increaseQuantity = (cartList, productToIncrease) => {
-	return cartList.map(item => {
-		if (item.id === productToIncrease.id) {
-			return ({...productToIncrease, quantity: productToIncrease.quantity + 1})
-		}
-		return item; 
-	})
 }
 
 // decreasing quantity on an existing product; 
@@ -29,7 +21,7 @@ const decrementQuantity = (productList, productToDecrease) => {
 	if (productToDecrease.quantity > 1) {
 		return productList.map(product => {
 			if (product.id === productToDecrease.id) {
-				return ({...productToDecrease, quantity: productToDecrease.quantity - 1})
+				return ({ ...product, quantity: product.quantity - 1})
 			}
 			return product
 		})
@@ -51,8 +43,7 @@ export const cartListContext = createContext({
 	cartList: [], 
 	isCartOpen: false, 
 	toggleCart: () => {}, 
-	productToAdd: () => { }, 
-	increment: () => {}, 
+	productToAdd: () => { },  
 	decrement: () => { }, 
 	clearProduct: () => { }, 
 	totalQuantity: 0, 
@@ -73,10 +64,6 @@ export const CartListProvider = ({ children }) => {
 		setCartList(addProductToList(cartList, product))
 	}; 
 
-	const increment = (product) => {
-		setCartList(increaseQuantity(cartList, product))
-	}
-
 	const decrement = (productToDecrease) => {
 		setCartList(decrementQuantity(cartList, productToDecrease));
 	}
@@ -86,13 +73,15 @@ export const CartListProvider = ({ children }) => {
 	}
 
 	useEffect(() => {
-		setTotalQuantity(cartList
-			.reduce((total, product) => total += product.quantity, 0))
+		const newCartList = cartList.reduce((total, item) => total += item.quantity, 0);
+
+		setTotalQuantity(newCartList)
 	}, [cartList])
 
 	useEffect(() => {
-		setTotalPrice(cartList
-			.reduce((total, product) => total += product.price * product.quantity, 0))
+		const newCartList = cartList.reduce((total, item) => total += item.quantity * item.price, 0);
+
+		setTotalPrice(newCartList)
 	}, [cartList]); 
 
 	const toggleCart = () => {
@@ -104,7 +93,6 @@ export const CartListProvider = ({ children }) => {
 		isCartOpen, 
 		toggleCart,
 		productToAdd, 
-		increment, 
 		decrement, 
 		clearProduct, 
 		totalQuantity, 
