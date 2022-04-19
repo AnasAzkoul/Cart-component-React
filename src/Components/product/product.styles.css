@@ -1,0 +1,16 @@
+.product-container{
+	margin: 1rem;
+	display: flex;
+	justify-content: space-between;
+	border-bottom: solid 1px black; 
+}
+
+
+.product-container span{
+	font-size: 2rem;
+	/* display: inline-block; */
+}
+
+button{
+	margin: 0 0.5rem;
+}
