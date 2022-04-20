@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect } from "react";
+import { createContext, useReducer, useEffect } from "react";
 
 
 
@@ -40,50 +40,113 @@ const deleteProduct = (productList, productToDelete) => {
 
 
 export const cartListContext = createContext({
+	cartList: [],
+	isCartOpen: false,
+	toggleCart: () => { },
+	productToAdd: () => { },
+	decrement: () => { },
+	clearProduct: () => { },
+	totalQuantity: 0,
+	setTotalQuantity: () => { },
+	totalPrice: 0,
+	setTotalPrice: () => { }
+}); 
+
+const CART_LIST_ACTION_TYPES = {
+	ADD_PRODUCT_TO_CART: 'ADD_PRODUCT_TO_CART', 
+	DECREMENT_CART_LIST_QUANTITY: 'DECREMENT_CART_LIST_QUANTITY', 
+	CLEAR_ITEM_FROM_CART_LIST: 'CLEAR_ITEM_FROM_CART_LIST', 
+	TOGGLE_CART: 'TOGGLE_CART', 
+	CART_TOTAL: 'CART_TOTAL', 
+	CART_TOTAL_PRICE: 'CART_TOTAL_PRICE', 
+}
+
+
+const INITIAL_STATE = {
 	cartList: [], 
 	isCartOpen: false, 
-	toggleCart: () => {}, 
-	productToAdd: () => { }, 
-	decrement: () => { }, 
-	clearProduct: () => { }, 
 	totalQuantity: 0, 
-	setTotalQuantity: () => { }, 
 	totalPrice: 0, 
-	setTotalPrice: () => {}
-})
+}; 
+
+
+const cartListReducer = (state, action) => {
+	const { type, payload } = action;
+
+	switch (type) {
+		case CART_LIST_ACTION_TYPES.ADD_PRODUCT_TO_CART:
+			return {
+				...state, 
+				cartList: payload, 
+			}
+		case CART_LIST_ACTION_TYPES.DECREMENT_CART_LIST_QUANTITY: 
+			return {
+				...state, 
+				cartList: payload
+			}
+		case CART_LIST_ACTION_TYPES.CLEAR_ITEM_FROM_CART_LIST: 
+			return {
+				...state,
+				cartList: payload
+			}
+		case CART_LIST_ACTION_TYPES.TOGGLE_CART: 
+			return {
+				...state, 
+				isCartOpen: !state.isCartOpen
+			}
+		case CART_LIST_ACTION_TYPES.CART_TOTAL:
+			return {
+				...state, 
+				totalQuantity: payload
+			}
+		case CART_LIST_ACTION_TYPES.CART_TOTAL_PRICE: 
+			return {
+				...state, 
+				totalPrice: payload
+			}
+		default:
+			return state;
+	}
+}; 
 
 
 
 export const CartListProvider = ({ children }) => {
-	const [cartList, setCartList] = useState([]); 
-	const [totalQuantity, setTotalQuantity] = useState(0); 
-	const [totalPrice, setTotalPrice] = useState(0); 
-	const [isCartOpen, setIsCartOpen] = useState(false); 
+	const [state, dispatch] = useReducer(cartListReducer, INITIAL_STATE); 
+	const { cartList, isCartOpen, totalQuantity, totalPrice } = state; 
+
 
 	const productToAdd = (product) => {
-		setCartList(addProductToList(cartList, product))
+		const newCartList = addProductToList(cartList, product)
+		dispatch(
+			{ type: CART_LIST_ACTION_TYPES.ADD_PRODUCT_TO_CART, payload: newCartList }
+		)
 	}; 
 
 	const decrement = (productToDecrease) => {
-		setCartList(decrementQuantity(cartList, productToDecrease));
+		const newCartList = decrementQuantity(cartList, productToDecrease)
+		dispatch({type: CART_LIST_ACTION_TYPES.DECREMENT_CART_LIST_QUANTITY, payload: newCartList});
 	}
 
 	const clearProduct = (productToDelete) => {
-		setCartList(deleteProduct(cartList, productToDelete)); 
+		const newCartList = deleteProduct(cartList, productToDelete); 
+		dispatch({type: CART_LIST_ACTION_TYPES.CLEAR_ITEM_FROM_CART_LIST, payload: newCartList}); 
 	}
 
 	useEffect(() => {
-		setTotalQuantity(cartList
-			.reduce((total, product) => total += product.quantity, 0))
+		const newCartTotal = cartList
+			.reduce((total, product) => total += product.quantity, 0); 
+		dispatch({type: CART_LIST_ACTION_TYPES.CART_TOTAL, payload: newCartTotal})
 	}, [cartList])
 
 	useEffect(() => {
-		setTotalPrice(cartList
-			.reduce((total, product) => total += product.price * product.quantity, 0))
+		const newTotalPrice = cartList
+			.reduce((total, product) => total += product.price * product.quantity, 0);
+		dispatch({type: CART_LIST_ACTION_TYPES.CART_TOTAL_PRICE, payload: newTotalPrice})
 	}, [cartList]); 
 
 	const toggleCart = () => {
-		setIsCartOpen(!isCartOpen); 
+		dispatch({type: CART_LIST_ACTION_TYPES.TOGGLE_CART}); 
 	}
 	
 	const value = {
