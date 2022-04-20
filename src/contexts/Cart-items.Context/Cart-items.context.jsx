@@ -8,28 +8,20 @@ const addProductToList = (cartList, productToAdd) => {
 	const existingProduct = cartList.find(product => product.id === productToAdd.id); 
 	// if that's true, return the product with increased quantity,
 	if (existingProduct) {
-		return cartList.map(product => ({ ...product, quantity: product.quantity + 1 })); 
+		return cartList.map(item => item.id === productToAdd.id ?
+			({ ...item, quantity: item.quantity + 1 }) : item); 
 	}
 
 	// if it doens't exist, return the new product with quantity equals to 1, 
 	return [...cartList, { ...productToAdd, quantity: 1 }]; 
-}
-// increment existing product
-const increaseQuantity = (cartList, productToIncrease) => {
-	return cartList.map(item => {
-		if (item.id === productToIncrease.id) {
-			return ({...productToIncrease, quantity: productToIncrease.quantity + 1})
-		}
-		return item; 
-	})
-}
+}; 
 
 // decreasing quantity on an existing product; 
 const decrementQuantity = (productList, productToDecrease) => {
 	if (productToDecrease.quantity > 1) {
 		return productList.map(product => {
 			if (product.id === productToDecrease.id) {
-				return ({...productToDecrease, quantity: productToDecrease.quantity - 1})
+				return ({ ...product, quantity: product.quantity - 1})
 			}
 			return product
 		})
@@ -52,7 +44,6 @@ export const cartListContext = createContext({
 	isCartOpen: false, 
 	toggleCart: () => {}, 
 	productToAdd: () => { }, 
-	increment: () => {}, 
 	decrement: () => { }, 
 	clearProduct: () => { }, 
 	totalQuantity: 0, 
@@ -72,10 +63,6 @@ export const CartListProvider = ({ children }) => {
 	const productToAdd = (product) => {
 		setCartList(addProductToList(cartList, product))
 	}; 
-
-	const increment = (product) => {
-		setCartList(increaseQuantity(cartList, product))
-	}
 
 	const decrement = (productToDecrease) => {
 		setCartList(decrementQuantity(cartList, productToDecrease));
@@ -103,8 +90,7 @@ export const CartListProvider = ({ children }) => {
 		cartList, 
 		isCartOpen, 
 		toggleCart,
-		productToAdd, 
-		increment, 
+		productToAdd,  
 		decrement, 
 		clearProduct, 
 		totalQuantity, 

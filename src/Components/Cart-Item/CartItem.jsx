@@ -6,13 +6,13 @@ import './CartItem.styles.css'
 const CartItem = ({ item }) => {
 	const { name, quantity, price } = item; 
 	const {
-		increment,
+		productToAdd,
 		decrement,
 		clearProduct,
 	} = useContext(cartListContext); 
 	
 	const incrementHandler = () => {
-		increment(item);
+		productToAdd(item);
 	}
 
 	const decrementHandler = () => {

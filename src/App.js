@@ -22,7 +22,7 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Welcome to the Product List App</h1>
+      <h1>Product List App With useState</h1>
       <div className='cart-info'>
         {
           isCartOpen ?
