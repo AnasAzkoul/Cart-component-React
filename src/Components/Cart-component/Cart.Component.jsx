@@ -6,9 +6,7 @@ import './Cart.styles.css'
 
 const Cart = () => {
 
-	const {
-		cartList, 
-	} = useContext(cartListContext); 
+	const {cartList} = useContext(cartListContext); 
 
 	console.log(cartList)
 
