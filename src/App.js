@@ -1,21 +1,22 @@
-import { useContext } from 'react';
-import { cartListContext } from './contexts/Cart-items.Context/Cart-items.context';
+import { useDispatch, useSelector } from 'react-redux';
+import {selectIsCartOpen, selectCartTotal, selectCartTotalPrice} from './store/cartList/cart.selectors'; 
+import {toggleCart} from './store/cartList/cart.action'
 
 import Cart from './Components/Cart-component/Cart.Component';
 import ProductsList from './Components/Products-List/ProductsList.component';
 import './App.css';
 
 function App() {
-  const {
-    toggleCart,
-    isCartOpen,
-    totalQuantity,
-    totalPrice,
-  } = useContext(cartListContext); 
+
+  const dispatch = useDispatch(); 
+  const isCartOpen = useSelector(selectIsCartOpen); 
+  const totalQuantity = useSelector(selectCartTotal); 
+  const totalPrice = useSelector(selectCartTotalPrice)
+  
 
 
   const toggleHandler = () => {
-    toggleCart(); 
+    dispatch(toggleCart()); 
   }
 
   

@@ -1,26 +1,25 @@
-import React, {useContext} from 'react'; 
-import { cartListContext } from '../../contexts/Cart-items.Context/Cart-items.context';
+import { productToAdd, decrement, clearProduct } from '../../store/cartList/cart.action';
+import { selectCartList } from '../../store/cartList/cart.selectors';
+
+import { useDispatch, useSelector } from 'react-redux';
 
 import './CartItem.styles.css'
 
 const CartItem = ({ item }) => {
 	const { name, quantity, price } = item; 
-	const {
-		productToAdd,
-		decrement,
-		clearProduct,
-	} = useContext(cartListContext); 
+	const dispatch = useDispatch(); 
+	const cartList = useSelector(selectCartList); 
 	
 	const incrementHandler = () => {
-		productToAdd(item);
+		dispatch(productToAdd(cartList, item));
 	}
 
 	const decrementHandler = () => {
-		decrement(item); 
+		dispatch(decrement(cartList, item)); 
 	}
 
 	const clearHandler = () => {
-		clearProduct(item); 
+		dispatch(clearProduct(cartList, item)); 
 	}
 
 

@@ -1,15 +1,12 @@
-import React, { useContext } from 'react'; 
-import { cartListContext } from '../../contexts/Cart-items.Context/Cart-items.context';
+import { selectCartList } from '../../store/cartList/cart.selectors';
+import { useSelector } from 'react-redux';
 
 import CartItem from '../Cart-Item/CartItem'
 import './Cart.styles.css'
 
 const Cart = () => {
 
-	const {cartList} = useContext(cartListContext); 
-
-	console.log(cartList)
-
+	const cartList = useSelector(selectCartList); 
 
   return (
 	  <div className='cart-container'>
