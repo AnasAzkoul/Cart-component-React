@@ -3,14 +3,25 @@
 	display: flex;
 	justify-content: space-between;
 	border-bottom: solid 1px black; 
+	width: 600px;
 }
 
 
 .product-container span{
 	font-size: 2rem;
+	width: 400px;
 	/* display: inline-block; */
 }
 
 button{
 	margin: 0 0.5rem;
+}
+
+.heart-icon-container{
+	width: 25px;
+	height: 25px;
+}
+
+svg{
+	fill: black
 }

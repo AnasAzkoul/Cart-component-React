@@ -1,0 +1,8 @@
+.wish-list-container{
+	border: 1px solid black; 
+	margin: 1rem;
+	display: flex;
+	flex-direction: column;
+	height: 25vh;
+	overflow: scroll;
+}
