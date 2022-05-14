@@ -3,7 +3,9 @@ import { cartListContext } from './contexts/Cart-items.Context/Cart-items.contex
 
 import Cart from './Components/Cart-component/Cart.Component';
 import ProductsList from './Components/Products-List/ProductsList.component';
+import WishList from './Components/wish-list/wish-list.component';
 import './App.css';
+
 
 function App() {
   const {
@@ -23,6 +25,7 @@ function App() {
   return (
     <div className="App">
       <h1>Product List App With useReducer V2</h1>
+      <WishList />
       <div className='cart-info'>
         {
           isCartOpen ?
